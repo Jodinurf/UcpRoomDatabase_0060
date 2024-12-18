@@ -12,3 +12,12 @@ fun Barang.toDetaiUIEvent() : BarangEvent {
         namaSupplier = namaSupplier
     )
 }
+
+data class BarangEvent(
+    val id: Int,
+    val namaBarang: String,
+    val deskripsi: String,
+    val harga: Int,
+    val stok: Int,
+    val namaSupplier: String
+)
