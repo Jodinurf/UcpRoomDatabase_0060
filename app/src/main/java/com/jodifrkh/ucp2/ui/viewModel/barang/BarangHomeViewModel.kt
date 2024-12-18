@@ -16,20 +16,20 @@ import kotlinx.coroutines.flow.stateIn
 class BarangHomeViewModel(
     private val repositoryBrg: RepositoryBrg
 ) : ViewModel() {
-    val homeUiState: StateFlow<HomeUIState> = repositoryBrg.getAllBarang()
+    val homeUiStateBrg: StateFlow<HomeUIStateBrg> = repositoryBrg.getAllBarang()
         .filterNotNull()
         .map {
-            HomeUIState (
+            HomeUIStateBrg (
                 listBarang = it.toList(),
                 isLoading = false
             )
         }
         .onStart {
-            emit(HomeUIState(isLoading = true))
+            emit(HomeUIStateBrg(isLoading = true))
             delay(900)
         }
         .catch {
-            HomeUIState(
+            HomeUIStateBrg(
                 isLoading = false,
                 isError = true,
                 errorMessage = it.message?: "Terjadi Kesalahan"
@@ -38,13 +38,13 @@ class BarangHomeViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = HomeUIState(
+            initialValue = HomeUIStateBrg(
                 isLoading = true
             )
         )
 }
 
-data class HomeUIState (
+data class HomeUIStateBrg (
     val listBarang: List<Barang> = listOf(),
     val isLoading: Boolean = false,
     val isError: Boolean = false,
