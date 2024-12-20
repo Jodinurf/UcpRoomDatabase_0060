@@ -45,6 +45,7 @@ fun Homepage(
             .background(color = Color.White)
     ) {
         HeaderSection()
+        BodySection(onItemClick = onItemClick)
     }
 }
 
@@ -103,6 +104,75 @@ fun HeaderSection() {
     }
 }
 
+@Composable
+fun BodySection(
+    onItemClick: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = "Selamat datang di aplikasi manajemen gudang kami!",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Gray,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
 
+        Text(
+            text = "Gunakan fitur-fitur di bawah ini untuk mengelola Supplier dan Barang Anda dengan lebih efisien. " +
+                    "Pastikan untuk selalu memantau stok agar operasional tetap lancar.",
+            fontSize = 14.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
 
+    }
+}
 
+@Composable
+fun ManageBox(
+    title: String,
+    description: String,
+    backgroundColor: Color,
+    iconResource: Int,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = backgroundColor, shape = RoundedCornerShape(16.dp))
+            .clickable { onClick() }
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = description,
+                    fontSize = 14.sp,
+                    color = Color.White
+                )
+            }
+            Image(
+                painter = painterResource(id = iconResource),
+                contentDescription = "$title Icon",
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+            )
+        }
+    }
+}
