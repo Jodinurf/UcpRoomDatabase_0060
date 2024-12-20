@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 class SupplierHomeViewModel (
     private val repositorySpl: RepositorySpl
 ) : ViewModel() {
+
     val homeUiStateSpl: StateFlow<HomeUIStateSpl> = repositorySpl.getAllSupplier()
         .filterNotNull()
         .map {
@@ -29,10 +30,12 @@ class SupplierHomeViewModel (
             delay(900)
         }
         .catch {
-            HomeUIStateSpl(
-                isLoading = false,
-                isError = true,
-                errorMessage = it.message?: "Terjadi Kesalahan"
+            emit(
+                HomeUIStateSpl(
+                    isLoading = false,
+                    isError = true,
+                    errorMessage = it.message?: "Terjadi Kesalahan"
+                )
             )
         }
         .stateIn(
