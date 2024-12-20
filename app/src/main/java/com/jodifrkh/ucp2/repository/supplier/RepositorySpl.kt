@@ -8,5 +8,5 @@ interface RepositorySpl {
 
     fun getAllSupplier(): Flow<List<Supplier>>
 
-    fun getSupplier(id: String): Flow<Supplier>
+    fun getSupplier(id: Int) : Flow<Supplier>
 }
