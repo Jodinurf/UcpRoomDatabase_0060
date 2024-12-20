@@ -130,6 +130,31 @@ fun BodySection(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
+        ManageBox(
+            title = "Manage Supplier",
+            description = "Kelola data supplier di sini. Pantau dan atur informasi supplier dengan cepat.",
+            backgroundColor = Color(0xFF00C853),
+            iconResource = R.drawable.supplier,
+            onClick = { onItemClick("Supplier") }
+        )
+
+        ManageBox(
+            title = "Manage Barang",
+            description = "Kelola data barang di sini. Tambahkan, ubah, atau hapus data barang dengan mudah.",
+            backgroundColor = Color(0xFF007BFF),
+            iconResource = R.drawable.box,
+            onClick = { onItemClick("Barang") }
+        )
+
+        Spacer(modifier = Modifier.size(16.dp))
+
+        Text(
+            text = "Jaga performa gudang Anda dengan terus memperbarui data barang dan supplier. Aplikasi ini dirancang untuk mendukung kebutuhan Anda!",
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 8.dp)
+        )
     }
 }
 
