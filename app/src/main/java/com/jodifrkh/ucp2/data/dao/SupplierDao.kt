@@ -15,5 +15,5 @@ interface SupplierDao {
     fun getAllSupplier(): Flow<List<Supplier>>
 
     @Query("SELECT * FROM tblSupplier WHERE id = :id")
-    fun getSupplier(id: String): Flow<Supplier>
+    fun getSupplier(id: Int): Flow<Supplier>
 }
