@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.jodifrkh.ucp2"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.jodifrkh.ucp2"
@@ -67,6 +67,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("androidx.compose.ui:ui-tooling-preview:1.3.0")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.3.0")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.navigation:navigation-compose:2.8.3")
