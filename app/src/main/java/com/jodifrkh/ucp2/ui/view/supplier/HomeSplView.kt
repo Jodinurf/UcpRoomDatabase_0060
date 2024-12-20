@@ -71,8 +71,15 @@ fun HomeSplView(
                 )
             }
         }
-    ) {
+    ) { innerPadding ->
+        val homeSplUiState by viewModel.homeUiStateSpl.collectAsState()
 
+        BodyHomeSplView(
+            homeUiState = homeSplUiState,
+            onClick = {
+                onDetailSplClick(it) },
+            modifier = modifier.padding(innerPadding)
+        )
     }
 }
 
