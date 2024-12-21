@@ -13,16 +13,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -31,14 +36,57 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jodifrkh.ucp2.R
 import com.jodifrkh.ucp2.data.entity.Barang
 import com.jodifrkh.ucp2.ui.customwidget.LoadingState
+import com.jodifrkh.ucp2.ui.customwidget.TopAppBar
+import com.jodifrkh.ucp2.ui.viewModel.barang.BarangHomeViewModel
+import com.jodifrkh.ucp2.ui.viewModel.PenyediaViewModel
 import com.jodifrkh.ucp2.ui.viewModel.barang.HomeUIStateBrg
 import kotlinx.coroutines.launch
 
 
+@Composable
+fun HomeBrgView(
+    modifier: Modifier = Modifier,
+    viewModel: BarangHomeViewModel = viewModel(factory = PenyediaViewModel.Factory),
+    onAddBrgClick: () -> Unit = { },
+    onDetailBrgClick: (String) -> Unit = { },
+    onBackArrow: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = "Data Barang",
+                onBackClick = onBackArrow,
+                actionIcon = R.drawable.box
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddBrgClick,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Tambah Barang"
+                )
+            }
+        }
+    ) { innerPadding ->
+        val homeBrgUiState by viewModel.homeUiStateBrg.collectAsState()
 
+        BodyHomeBrgView(
+            homeUiState = homeBrgUiState,
+            onClick = {
+                onDetailBrgClick(it)
+            },
+            modifier = Modifier.padding(innerPadding)
+        )
+    }
+}
 
 @Composable
 fun BodyHomeBrgView (
