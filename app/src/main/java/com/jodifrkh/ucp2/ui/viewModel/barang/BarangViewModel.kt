@@ -7,17 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jodifrkh.ucp2.data.entity.Barang
 import com.jodifrkh.ucp2.repository.barang.RepositoryBrg
-import com.jodifrkh.ucp2.repository.supplier.RepositorySpl
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class BarangViewModel(private val repositoryBrg: RepositoryBrg, repositorySpl: RepositorySpl) : ViewModel() {
+class BarangViewModel(private val repositoryBrg: RepositoryBrg,) : ViewModel() {
     var uiBrgState by mutableStateOf(brgUIState())
 
-    val supplierNames: StateFlow<List<String>> = repositorySpl.getSupplierNama()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun updateBrgState(barangEvent: BarangEvent) {
         uiBrgState = uiBrgState.copy(barangEvent = barangEvent)
