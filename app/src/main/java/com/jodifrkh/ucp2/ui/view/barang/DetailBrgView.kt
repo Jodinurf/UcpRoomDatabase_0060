@@ -5,14 +5,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -23,12 +29,60 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.jodifrkh.ucp2.R
 import com.jodifrkh.ucp2.data.entity.Barang
 import com.jodifrkh.ucp2.ui.customwidget.LoadingState
+import com.jodifrkh.ucp2.ui.customwidget.TopAppBar
+import com.jodifrkh.ucp2.ui.viewModel.PenyediaViewModel
+import com.jodifrkh.ucp2.ui.viewModel.barang.DetailBarangViewModel
 import com.jodifrkh.ucp2.ui.viewModel.barang.DetailBrgUiState
 import com.jodifrkh.ucp2.ui.viewModel.barang.toBarangEntity
 
+@Composable
+fun DetailBrgView(
+    modifier: Modifier = Modifier,
+    viewModel: DetailBarangViewModel = viewModel(factory = PenyediaViewModel.Factory),
+    onBackArrow: () -> Unit = { },
+    onEditClick: (String) -> Unit = { },
+    onDeleteClick: () -> Unit = { }
+) {
+    Scaffold (
+        topBar = {
+            TopAppBar(
+                modifier = Modifier,
+                title = "Detail Data Barang",
+                onBackClick = onBackArrow,
+                actionIcon = R.drawable.box
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    onEditClick(viewModel.detailBrgUiState.value.detailUiBrgEvent.id)
+                },
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = "Edit"
+                )
+            }
+        }
+    ) { innerPadding->
+        val detailBrgUiState by viewModel.detailBrgUiState.collectAsState()
 
+        BarangDetailBody(
+            modifier = Modifier.padding(innerPadding),
+            detailBrgUiState = detailBrgUiState,
+            onDeleteClick = {
+                viewModel.deleteBrg()
+                onDeleteClick()
+            }
+        )
+    }
+}
 
 @Composable
 fun BarangDetailBody(
