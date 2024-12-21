@@ -8,6 +8,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,12 +21,78 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jodifrkh.ucp2.R
 import com.jodifrkh.ucp2.data.NamaSupplier
+import com.jodifrkh.ucp2.ui.customwidget.TopAppBar
 import com.jodifrkh.ucp2.ui.customwidget.DropDownSupplier
+import com.jodifrkh.ucp2.ui.viewModel.PenyediaViewModel
 import com.jodifrkh.ucp2.ui.viewModel.barang.BarangEvent
+import com.jodifrkh.ucp2.ui.viewModel.barang.BarangViewModel
 import com.jodifrkh.ucp2.ui.viewModel.barang.FormErrorBrgState
 import com.jodifrkh.ucp2.ui.viewModel.barang.brgUIState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+@Composable
+fun InsertBrgView(
+    onBackArrow: () -> Unit,
+    onNavigate: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: BarangViewModel = viewModel(factory = PenyediaViewModel.Factory)
+) {
+    val uiState = viewModel.uiBrgState
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    var isLoading by remember { mutableStateOf(false) }
+
+    LaunchedEffect(uiState.snackBarMessage) {
+        uiState.snackBarMessage?.let { message ->
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(message)
+                viewModel.resetSnackBarBrgMessage()
+            }
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = "Tambah Data Barang",
+                onBackClick = onBackArrow,
+                actionIcon = R.drawable.box
+            )
+        },
+        modifier = modifier,
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
+            InsertBodyBrg(
+                uiState = uiState,
+                onValueChange = { updatedEvent ->
+                    viewModel.updateBrgState(updatedEvent)
+                },
+                onClick = {
+                    if (!isLoading) {
+                        isLoading = true
+                        coroutineScope.launch {
+                            viewModel.saveDataBrg()
+                            delay(3000) // Simulasi proses selama 3 detik
+                            isLoading = false
+                            onNavigate()
+                        }
+                    }
+                },
+                isLoading = isLoading
+            )
+        }
+    }
+}
 
 @Composable
 fun InsertBodyBrg(
