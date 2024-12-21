@@ -15,3 +15,24 @@ object DestinasiHomeSpl : HalamanController {
 object DestinasiInsertSpl : HalamanController {
     override val route = "supplier/add"
 }
+
+
+object DestinasiHomeBrg : HalamanController {
+    override val route = "barang"
+}
+
+object DestinasiInsertBrg : HalamanController {
+    override val route = "barang/add"
+}
+
+object DestinasiDetailBrg : HalamanController {
+    override val route = "barang"
+    const val idBrg = "id"
+    val routesWithArg = "$route/{$idBrg}"
+}
+
+object DestinasiUpdateBrg : HalamanController {
+    override val route = "updateBrg"
+    const val idBrg = "id"
+    val routesWithArg = "$route/{$idBrg}"
+}
