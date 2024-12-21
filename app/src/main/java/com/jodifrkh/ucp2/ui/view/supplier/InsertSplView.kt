@@ -1,5 +1,6 @@
 package com.jodifrkh.ucp2.ui.view.supplier
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -27,6 +30,46 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jodifrkh.ucp2.ui.viewModel.supplier.FormErrorSplState
 import com.jodifrkh.ucp2.ui.viewModel.supplier.SupplierEvent
+import com.jodifrkh.ucp2.ui.viewModel.supplier.splUIState
+
+
+@Composable
+fun InsertBodySpl(
+    modifier: Modifier = Modifier,
+    onValueChange: (SupplierEvent) -> Unit,
+    uiState: splUIState,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        FormSupplier(
+            supplierEvent = uiState.supplierEvent,
+            onValueChange = onValueChange,
+            errorState = uiState.isEntrySplValid,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = onClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = MaterialTheme.shapes.medium,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Text(
+                text = "Simpan",
+                color = Color.White,
+                fontSize = 18.sp
+            )
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
