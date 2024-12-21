@@ -67,7 +67,7 @@ data class DetailBrgUiState(
     val isUiBarangEmpty: Boolean
         get() = detailUiBrgEvent == BarangEvent()
 
-    val isUiBarangEvenntNotEmpty:Boolean
+    val isUiBarangEventNotEmpty:Boolean
         get() = detailUiBrgEvent != BarangEvent()
 }
 
