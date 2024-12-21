@@ -9,11 +9,8 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +28,6 @@ import com.jodifrkh.ucp2.ui.viewModel.barang.BarangEvent
 import com.jodifrkh.ucp2.ui.viewModel.barang.BarangViewModel
 import com.jodifrkh.ucp2.ui.viewModel.barang.FormErrorBrgState
 import com.jodifrkh.ucp2.ui.viewModel.barang.brgUIState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -44,7 +40,6 @@ fun InsertBrgView(
     val uiState = viewModel.uiBrgState
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.snackBarMessage) {
         uiState.snackBarMessage?.let { message ->
@@ -78,17 +73,9 @@ fun InsertBrgView(
                     viewModel.updateBrgState(updatedEvent)
                 },
                 onClick = {
-                    if (!isLoading) {
-                        isLoading = true
-                        coroutineScope.launch {
-                            viewModel.saveDataBrg()
-                            delay(3000) // Simulasi proses selama 3 detik
-                            isLoading = false
-                            onNavigate()
-                        }
-                    }
-                },
-                isLoading = isLoading
+                    viewModel.saveDataBrg()
+                    onNavigate()
+                }
             )
         }
     }
@@ -99,8 +86,7 @@ fun InsertBodyBrg(
     modifier: Modifier = Modifier,
     onValueChange: (BarangEvent) -> Unit,
     uiState: brgUIState,
-    onClick: () -> Unit,
-    isLoading: Boolean
+    onClick: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -122,7 +108,6 @@ fun InsertBodyBrg(
 
         Button(
             onClick = onClick,
-            enabled = !isLoading,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -131,18 +116,11 @@ fun InsertBodyBrg(
             shape = MaterialTheme.shapes.medium,
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    color = Color.White,
-                    modifier = Modifier.size(20.dp)
-                )
-            } else {
-                Text(
-                    text = "Simpan",
-                    color = Color.White,
-                    fontSize = 18.sp
-                )
-            }
+            Text(
+                text = "Simpan",
+                color = Color.White,
+                fontSize = 18.sp
+            )
         }
     }
 }
@@ -152,7 +130,7 @@ fun FormBarang(
     modifier: Modifier = Modifier,
     barangEvent: BarangEvent = BarangEvent(),
     onValueChange: (BarangEvent) -> Unit = { },
-    errorBrgState: FormErrorBrgState = FormErrorBrgState(),
+    errorBrgState: FormErrorBrgState = FormErrorBrgState()
 ) {
     Column(
         modifier = modifier
