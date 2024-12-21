@@ -14,8 +14,4 @@ class LocalRepositorySpl (
 
     override fun getAllSupplier(): Flow<List<Supplier>>  =
         supplierDao.getAllSupplier()
-
-
-    override fun getSupplier(id: Int): Flow<Supplier> =
-        supplierDao.getSupplier(id)
 }
