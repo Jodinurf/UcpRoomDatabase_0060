@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 class BarangHomeViewModel(
     private val repositoryBrg: RepositoryBrg
 ) : ViewModel() {
+
     val homeUiStateBrg: StateFlow<HomeUIStateBrg> = repositoryBrg.getAllBarang()
         .filterNotNull()
         .map {
