@@ -8,4 +8,6 @@ interface RepositorySpl {
 
     fun getAllSupplier(): Flow<List<Supplier>>
 
+    fun getSupplierNama(): Flow<List<String>>
+
 }

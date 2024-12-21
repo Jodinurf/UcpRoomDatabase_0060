@@ -14,4 +14,7 @@ interface SupplierDao {
     @Query("SELECT * FROM tblSupplier ORDER BY nama")
     fun getAllSupplier(): Flow<List<Supplier>>
 
+    @Query("SELECT nama FROM tblSupplier")
+    fun getSupplierNama(): Flow<List<String>>
+
 }
