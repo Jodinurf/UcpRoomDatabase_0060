@@ -1,14 +1,23 @@
 package com.jodifrkh.ucp2.ui.view.barang
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -19,11 +28,15 @@ import com.jodifrkh.ucp2.ui.customwidget.LoadingState
 import com.jodifrkh.ucp2.ui.viewModel.barang.DetailBrgUiState
 import com.jodifrkh.ucp2.ui.viewModel.barang.toBarangEntity
 
+
+
 @Composable
 fun BarangDetailBody(
     modifier: Modifier = Modifier,
-    detailBrgUiState: DetailBrgUiState
+    detailBrgUiState: DetailBrgUiState,
+    onDeleteClick: () -> Unit = { }
 ) {
+    var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
     when {
         detailBrgUiState.isLoading -> {
             LoadingState()
@@ -41,10 +54,41 @@ fun BarangDetailBody(
                     barang = detailBrgUiState.detailUiBrgEvent.toBarangEntity(),
                     modifier = modifier
                 )
+                Spacer(modifier = Modifier.padding(8.dp))
+                Button(
+                    onClick = {
+                        deleteConfirmationRequired = true
+                    },
+                    modifier = modifier.fillMaxWidth()
+                ) {
+                    Text("Delete")
+                }
+
+                if (deleteConfirmationRequired) {
+                    DeleteConfirmationDialog(
+                        onDeleteConfirm = {
+                            deleteConfirmationRequired = false
+                            onDeleteClick()
+                        },
+                        onDeleteCancel = { deleteConfirmationRequired = false},
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
+        }
+
+        detailBrgUiState.isUiBarangEmpty -> {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Data tidak Ditemukan",
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         }
     }
-
 }
 
 @Composable
@@ -77,6 +121,29 @@ fun ItemDetailBrg(
         }
     }
 
+}
+
+@Composable
+private fun DeleteConfirmationDialog(
+    onDeleteConfirm: () -> Unit,
+    onDeleteCancel: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(onDismissRequest = { },
+        title = { Text("Delete Data")},
+        text = { Text("Apakah anda yakin ingin menghapus data barang ini?")},
+        modifier = modifier,
+        dismissButton = {
+            TextButton(onClick = onDeleteCancel) {
+                Text("Cancel")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDeleteConfirm) {
+                Text("Yes")
+            }
+        }
+    )
 }
 
 @Composable
