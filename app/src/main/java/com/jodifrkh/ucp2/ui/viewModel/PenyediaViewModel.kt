@@ -1,12 +1,12 @@
 package com.jodifrkh.ucp2.ui.viewModel
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.jodifrkh.ucp2.GudangApp
-import com.jodifrkh.ucp2.ui.viewModel.barang.BarangHomeViewModel
-import com.jodifrkh.ucp2.ui.viewModel.barang.BarangViewModel
+import com.jodifrkh.ucp2.ui.viewModel.barang.*
 import com.jodifrkh.ucp2.ui.viewModel.supplier.*
 
 
@@ -26,12 +26,23 @@ object PenyediaViewModel {
         initializer {
             BarangViewModel(
                 GudangApp().containerApp.repositoryBrg,
-                GudangApp().containerApp.repositorySpl
             )
         }
         initializer {
             BarangHomeViewModel(
                 GudangApp().containerApp.repositoryBrg
+            )
+        }
+        initializer {
+            DetailBarangViewModel(
+                createSavedStateHandle(),
+                GudangApp().containerApp.repositoryBrg
+            )
+        }
+        initializer {
+           UpdateBarangViewModel(
+                createSavedStateHandle(),
+                GudangApp().containerApp.repositoryBrg,
             )
         }
     }
