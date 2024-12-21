@@ -48,7 +48,6 @@ fun HomeSplView(
     modifier: Modifier = Modifier,
     viewModel: SupplierHomeViewModel = viewModel(factory = PenyediaViewModel.Factory),
     onAddSplClick: () -> Unit = {},
-    onDetailSplClick: (String) -> Unit = {},
     onBackArrow: () -> Unit
 ) {
     Scaffold(
@@ -76,8 +75,6 @@ fun HomeSplView(
 
         BodyHomeSplView(
             homeUiState = homeSplUiState,
-            onClick = {
-                onDetailSplClick(it) },
             modifier = modifier.padding(innerPadding)
         )
     }
@@ -87,7 +84,6 @@ fun HomeSplView(
 fun BodyHomeSplView(
     homeUiState: HomeUIStateSpl,
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -122,7 +118,6 @@ fun BodyHomeSplView(
         else -> {
             ListSupplier(
                 listSpl = homeUiState.listSpl,
-                onClick = onClick,
                 modifier = modifier
             )
         }
@@ -133,7 +128,6 @@ fun BodyHomeSplView(
 fun ListSupplier(
     listSpl: List<Supplier>,
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -142,8 +136,7 @@ fun ListSupplier(
             items = listSpl,
             itemContent = { spl ->
                 CardSupplier(
-                    spl = spl,
-                    onClick = { onClick(spl.id.toString()) }
+                    spl = spl
                 )
             }
         )
@@ -154,10 +147,8 @@ fun ListSupplier(
 fun CardSupplier(
     spl: Supplier,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = { }
 ) {
     Card(
-        onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
