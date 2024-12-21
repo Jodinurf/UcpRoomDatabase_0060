@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface SupplierDao {
 
     @Insert
-    suspend fun inserSupplier(supplier: Supplier)
+    suspend fun insertSupplier(supplier: Supplier)
 
     @Query("SELECT * FROM tblSupplier ORDER BY nama")
     fun getAllSupplier(): Flow<List<Supplier>>

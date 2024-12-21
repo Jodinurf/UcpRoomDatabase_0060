@@ -9,7 +9,7 @@ class LocalRepositorySpl (
 ) : RepositorySpl {
 
     override suspend fun insertSupplier(supplier: Supplier) {
-        supplierDao.inserSupplier(supplier)
+        supplierDao.insertSupplier(supplier)
     }
 
     override fun getAllSupplier(): Flow<List<Supplier>>  =
