@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jodifrkh.ucp2.ui.view.Homepage
+import com.jodifrkh.ucp2.ui.view.barang.HomeBrgView
+import com.jodifrkh.ucp2.ui.view.barang.InsertBrgView
 import com.jodifrkh.ucp2.ui.view.supplier.HomeSplView
 import com.jodifrkh.ucp2.ui.view.supplier.InsertSplView
 
@@ -26,6 +28,7 @@ fun MainControllerPage(
                 onItemClick = { item ->
                     when (item) {
                         "Supplier" -> navController.navigate(DestinasiHomeSpl.route)
+                        "Barang" -> navController.navigate(DestinasiHomeBrg.route)
                         else -> {}
                     }
                 }
@@ -47,6 +50,34 @@ fun MainControllerPage(
             route = DestinasiInsertSpl.route
         ) {
             InsertSplView(
+                onBackArrow = {
+                    navController.popBackStack()
+                },
+                onNavigate = {
+                    navController.popBackStack()
+                },
+                modifier = Modifier
+            )
+        }
+        composable(
+            route = DestinasiHomeBrg.route
+        ) {
+            HomeBrgView(
+                onAddBrgClick = {
+                    navController.navigate(DestinasiInsertBrg.route)
+                },
+                onDetailBrgClick = { idBrg ->
+                    navController.navigate("${DestinasiDetailBrg.route}/$idBrg")
+                },
+                onBackArrow = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(
+            route = DestinasiInsertBrg.route
+        ) {
+            InsertBrgView(
                 onBackArrow = {
                     navController.popBackStack()
                 },
