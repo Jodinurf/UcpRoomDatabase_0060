@@ -12,6 +12,7 @@ import com.jodifrkh.ucp2.ui.view.Homepage
 import com.jodifrkh.ucp2.ui.view.barang.DetailBrgView
 import com.jodifrkh.ucp2.ui.view.barang.HomeBrgView
 import com.jodifrkh.ucp2.ui.view.barang.InsertBrgView
+import com.jodifrkh.ucp2.ui.view.barang.UpdateBarangView
 import com.jodifrkh.ucp2.ui.view.supplier.HomeSplView
 import com.jodifrkh.ucp2.ui.view.supplier.InsertSplView
 
@@ -112,6 +113,24 @@ fun MainControllerPage(
                     }
                 )
             }
+        }
+        composable(
+            DestinasiUpdateBrg.routesWithArg,
+            arguments = listOf(
+                navArgument(DestinasiDetailBrg.idBrg) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            UpdateBarangView(
+                onBackArrow = {
+                    navController.popBackStack()
+                },
+                onNavigate = {
+                    navController.popBackStack()
+                },
+                modifier = modifier
+            )
         }
     }
 }
