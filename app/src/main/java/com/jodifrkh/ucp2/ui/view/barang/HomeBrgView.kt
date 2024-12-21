@@ -165,9 +165,9 @@ fun CardBarang(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = { }
 ) {
-    val backgroundColor = when {
-        brg.stok == 0 -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-        brg.stok in 1..10 -> MaterialTheme.colorScheme.error.copy(alpha = 0.2f)
+    val backgroundColor = when (brg.stok) {
+        0 -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+        in 1..10 -> MaterialTheme.colorScheme.error.copy(alpha = 0.2f)
         else -> MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
     }
 
