@@ -1,13 +1,23 @@
 package com.jodifrkh.ucp2.ui.view.barang
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jodifrkh.ucp2.R
+import com.jodifrkh.ucp2.data.NamaSupplier
+import com.jodifrkh.ucp2.ui.customwidget.DropDownSupplier
 import com.jodifrkh.ucp2.ui.viewModel.barang.BarangEvent
 import com.jodifrkh.ucp2.ui.viewModel.barang.FormErrorBrgState
 import com.jodifrkh.ucp2.ui.viewModel.barang.brgUIState
@@ -17,39 +27,53 @@ fun InsertBodyBrg(
     modifier: Modifier = Modifier,
     onValueChange: (BarangEvent) -> Unit,
     uiState: brgUIState,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isLoading: Boolean
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        FormBarang(
-            barangEvent = uiState.barangEvent,
-            onValueChange = onValueChange,
-            errorBrgState = uiState.isEntryBrgValid,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            FormBarang(
+                barangEvent = uiState.barangEvent,
+                onValueChange = onValueChange,
+                errorBrgState = uiState.isEntryBrgValid,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
         Button(
             onClick = onClick,
+            enabled = !isLoading,
             modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 16.dp),
             shape = MaterialTheme.shapes.medium,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            )
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text(
-                text = "Simpan",
-                color = Color.White,
-                fontSize = 18.sp
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    color = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+            } else {
+                Text(
+                    text = "Simpan",
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
+            }
         }
     }
 }
-
 
 @Composable
 fun FormBarang(
@@ -58,22 +82,186 @@ fun FormBarang(
     onValueChange: (BarangEvent) -> Unit = { },
     errorBrgState: FormErrorBrgState = FormErrorBrgState(),
 ) {
-     Column (
-         modifier = modifier.fillMaxWidth()
-     ) {
-         OutlinedTextField(
-             modifier = Modifier.fillMaxWidth(),
-             value = barangEvent.namaBarang,
-             onValueChange = {
-                 onValueChange(barangEvent.copy(namaBarang = it))
-                },
-             label = { Text("Nama Barang")},
-             isError = errorBrgState.namaBarang != null,
-             placeholder = { Text("Masukkan Nama Barang")}
-         )
-         Text(
-             text = errorBrgState.namaBarang ?: "",
-             color = Color.Red
-         )
-     }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        // Nama Barang
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = barangEvent.namaBarang,
+            onValueChange = {
+                onValueChange(barangEvent.copy(namaBarang = it))
+            },
+            label = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(R.drawable.item),
+                        contentDescription = "Nama Barang Icon",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Nama Barang")
+                }
+            },
+            placeholder = { Text("Masukkan Nama Barang") },
+            isError = errorBrgState.namaBarang != null,
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                errorBorderColor = Color.Red
+            )
+        )
+        if (errorBrgState.namaBarang != null) {
+            Text(
+                text = errorBrgState.namaBarang,
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 8.dp, top = 2.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Deskripsi
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = barangEvent.deskripsi,
+            onValueChange = {
+                onValueChange(barangEvent.copy(deskripsi = it))
+            },
+            label = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Filled.Info,
+                        contentDescription = "Deskripsi Icon",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Deskripsi")
+                }
+            },
+            placeholder = { Text("Masukkan Deskripsi Barang") },
+            isError = errorBrgState.deskripsi != null,
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                errorBorderColor = Color.Red
+            )
+        )
+        if (errorBrgState.deskripsi != null) {
+            Text(
+                text = errorBrgState.deskripsi,
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 8.dp, top = 2.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Harga
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = barangEvent.harga,
+            onValueChange = {
+                val filteredInput = it.filter { char -> char.isDigit() }
+                onValueChange(barangEvent.copy(harga = filteredInput))
+            },
+            label = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(R.drawable.money),
+                        contentDescription = "Harga Icon",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Harga")
+                }
+            },
+            placeholder = { Text("Masukkan Harga") },
+            isError = errorBrgState.harga != null,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                errorBorderColor = Color.Red
+            )
+        )
+        if (errorBrgState.harga != null) {
+            Text(
+                text = errorBrgState.harga,
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 8.dp, top = 2.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Stok
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = barangEvent.stok,
+            onValueChange = {
+                val filteredInput = it.filter { char -> char.isDigit() }
+                onValueChange(barangEvent.copy(stok = filteredInput))
+            },
+            label = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(R.drawable.stock),
+                        contentDescription = "Stok Icon",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Stok")
+                }
+            },
+            placeholder = { Text("Masukkan Stok Barang") },
+            isError = errorBrgState.stok != null,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                errorBorderColor = Color.Red
+            )
+        )
+        if (errorBrgState.stok != null) {
+            Text(
+                text = errorBrgState.stok,
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 8.dp, top = 2.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Supplier
+        DropDownSupplier(
+            selectedValue = barangEvent.namaSupplier,
+            options = NamaSupplier.options(),
+            label = "Nama Supplier",
+            onValueChangedEvent = { selectedSupplier ->
+                onValueChange(barangEvent.copy(namaSupplier = selectedSupplier))
+            }
+        )
+        if (errorBrgState.namaSupplier != null) {
+            Text(
+                text = errorBrgState.namaSupplier,
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 8.dp, top = 2.dp)
+            )
+        }
+    }
 }
