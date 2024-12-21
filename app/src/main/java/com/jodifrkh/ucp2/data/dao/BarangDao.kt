@@ -2,6 +2,7 @@ package com.jodifrkh.ucp2.data.dao
 
 import androidx.room.*
 import com.jodifrkh.ucp2.data.entity.Barang
+import com.jodifrkh.ucp2.data.entity.Supplier
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,7 +20,5 @@ interface BarangDao {
     fun getAllBarang(): Flow<List<Barang>>
 
     @Query("SELECT * FROM tblBarang WHERE id = :id")
-    fun getBarang(id: String): Flow<Barang>
-
-
+    fun getBarang(id: Int): Flow<Barang>
 }
