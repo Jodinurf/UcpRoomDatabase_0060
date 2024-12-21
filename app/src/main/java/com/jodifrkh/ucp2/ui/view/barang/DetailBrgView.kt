@@ -15,6 +15,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jodifrkh.ucp2.data.entity.Barang
+import com.jodifrkh.ucp2.ui.customwidget.LoadingState
+import com.jodifrkh.ucp2.ui.viewModel.barang.DetailBrgUiState
+import com.jodifrkh.ucp2.ui.viewModel.barang.toBarangEntity
+
+@Composable
+fun BarangDetailBody(
+    modifier: Modifier = Modifier,
+    detailBrgUiState: DetailBrgUiState
+) {
+    when {
+        detailBrgUiState.isLoading -> {
+            LoadingState()
+        }
+
+
+        detailBrgUiState.isUiBarangEventNotEmpty ->
+        {
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                ItemDetailBrg(
+                    barang = detailBrgUiState.detailUiBrgEvent.toBarangEntity(),
+                    modifier = modifier
+                )
+            }
+        }
+    }
+
+}
 
 @Composable
 fun ItemDetailBrg(
