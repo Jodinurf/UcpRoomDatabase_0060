@@ -3,10 +3,13 @@ package com.jodifrkh.ucp2.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.jodifrkh.ucp2.ui.view.Homepage
+import com.jodifrkh.ucp2.ui.view.barang.DetailBrgView
 import com.jodifrkh.ucp2.ui.view.barang.HomeBrgView
 import com.jodifrkh.ucp2.ui.view.barang.InsertBrgView
 import com.jodifrkh.ucp2.ui.view.supplier.HomeSplView
@@ -86,6 +89,29 @@ fun MainControllerPage(
                 },
                 modifier = Modifier
             )
+        }
+        composable(
+            DestinasiDetailBrg.routesWithArg,
+            arguments = listOf(
+                navArgument(DestinasiDetailBrg.idBrg) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val idBarang = it.arguments?.getString(DestinasiDetailBrg.idBrg)
+            idBarang?.let { idBarang ->
+                DetailBrgView(
+                    onBackArrow = {
+                        navController.popBackStack()
+                    },
+                    onEditClick = {
+                        navController.navigate("${DestinasiUpdateBrg.route}/$it")
+                    },
+                    onDeleteClick = {
+                        navController.popBackStack()
+                    }
+                )
+            }
         }
     }
 }
